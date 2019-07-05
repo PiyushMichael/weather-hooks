@@ -1,32 +1,31 @@
-import React,{createHook} from 'react';
+import React,{useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import {Summer,Winter,Loading} from './components';
 
-class App extends React.Component {
-	//const [lat,setLat] = createHook(100);
-	state = {lat: 100,err: 'eh',month: -1};
+const App = () => {
+	const [lat,setLat] = useState(100);
+	const [err,setErr] = useState('');
+	const [month,setMonth] = useState(-1);
 	
-	componentDidMount(){
+	useEffect(() => {
 		window.navigator.geolocation.getCurrentPosition(
-			pos => this.setState({lat: pos.coords.latitude}),
-			error => this.setState({err: error.message})
+			pos => setLat(pos.coords.latitude),
+			error => setErr(error.message)
 		);
-		this.setState({month: new Date().getMonth()});
-	}
+		setMonth(new Date().getMonth());
+	},[]);
 	
-	render(){
-		if (this.state.lat === 100) return <Loading />
-		else {
-			if (this.state.month>2 && this.state.month<9){
-				if (this.state.lat>0) return <Summer />
-				else return <Winter />
-			}
-			else {
-				if (this.state.lat>0) return <Winter />
-				else return <Summer />
-			}
+	if (lat === 100) return <Loading />
+	else {
+		if (month>2 && month<9){
+			if (lat>0) return <Summer />
+			else return <Winter />
 		}
-	}
-}
+		else {
+			if (this.lat>0) return <Winter />
+			else return <Summer />
+		}
+	}	
+};
 
 export default App;
